@@ -12,9 +12,23 @@ Content-Type: application/json
 #     "likes": "5"
 # }
 
+# {
+#     "title": "sewing blog",
+#     "author": "Agnieszka Kosiedowska",
+#     "url": "www.sew.com",
+#     "likes": "7"
+# }
+
+# {
+#     "title": "frontend blog",
+#     "author": "Agnieszka Kosiedowska",
+#     "url": "www.front.com",
+#     "likes": "34"
+# }
+
 {
-    "title": "sewing blog",
-    "author": "Agnieszka Kosiedowska",
-    "url": "www.sew.com",
-    "likes": "7"
+    "title": "learn piano blog",
+    "author": "Piotr K",
+    "url": "www.piano.blogspot.com",
+    "likes": "100"
 }
