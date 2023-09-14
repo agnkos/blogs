@@ -37,9 +37,23 @@ const mostBlogs = blogs => {
     }
 }
 
+const mostLikes = blogs => {
+    let groupedAuthors = _.groupBy(blogs, 'author')
+
+    let authorsLikes = _.map(_.entries(groupedAuthors), function (el) {
+        const reducer = (acc, curr) => {
+            return acc + curr.likes
+        }
+        return { author: el[0], likes: el[1].reduce(reducer, 0) }
+    })
+
+    return blogs.length === 0 ? 'the blog list is empty' : _.maxBy(authorsLikes, 'likes')
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
