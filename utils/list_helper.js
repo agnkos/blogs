@@ -1,3 +1,6 @@
+var _ = require('lodash');
+const array = require('lodash/array');
+
 const dummy = (blogs) => {
     return 1
 }
@@ -16,6 +19,7 @@ const favoriteBlog = blogs => {
     }
     if (blogs.length !== 0) {
         const blog = blogs.reduce(reducer)
+
         return {
             title: blog.title,
             author: blog.author,
@@ -24,8 +28,18 @@ const favoriteBlog = blogs => {
     } else return 'the blog list is empty'
 }
 
+const mostBlogs = blogs => {
+    let authorData = _.maxBy(_.entries(_.countBy(blogs, 'author')))
+
+    return blogs.length === 0 ? 'the blog list is empty' : {
+        author: authorData[0],
+        blogs: authorData[1]
+    }
+}
+
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }
