@@ -47,6 +47,12 @@ test('all blog are returned in json format', async () => {
     expect(response.body).toHaveLength(initialBlogs.length)
 }, 100000)
 
+test('all ids are defined', async () => {
+    const response = await api.get('/api/blogs')
+    const idArray = response.body.map(blog => blog.id)
+    idArray.forEach(id => expect(id).toBeDefined())
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
