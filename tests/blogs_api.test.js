@@ -53,6 +53,26 @@ test('all ids are defined', async () => {
     idArray.forEach(id => expect(id).toBeDefined())
 })
 
+test('a blog can be added', async () => {
+    const newBlog = {
+        title: "New Blog Title",
+        author: "New author",
+        url: "www.newblog.com",
+        likes: 11
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await Blog.find({})
+    expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
+    const titles = blogsAtEnd.map(blog => blog.title)
+    expect(titles).toContain('New Blog Title')
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
