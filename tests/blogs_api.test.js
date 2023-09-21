@@ -3,7 +3,6 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const blog = require('../models/blog')
 
 const initialBlogs = [
     {
@@ -126,6 +125,23 @@ describe('adding a blog', () => {
         expect(blogsAtEnd).toHaveLength(initialBlogs.length)
     })
 
+})
+
+test('updating a blog', async () => {
+    const blogsAtStart = await Blog.find({})
+    const blogsAtStartJson = blogsAtStart.map(blog => blog.toJSON())
+    const blogToUpdate = { ...blogsAtStartJson[0], likes: 50 }
+
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(blogToUpdate)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await Blog.find({})
+    expect(blogsAtEnd).toHaveLength(initialBlogs.length)
+    const blogLikes = blogsAtEnd[0].likes
+    expect(blogLikes).toBe(50)
 })
 
 describe('deleting a blog', () => {

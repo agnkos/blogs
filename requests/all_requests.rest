@@ -1,5 +1,4 @@
 GET http://localhost:3003/api/blogs
-
 ###
 
 POST http://localhost:3003/api/blogs
@@ -35,4 +34,17 @@ Content-Type: application/json
 
 ###
 
-DELETE  http://localhost:3003/api/blogs/11
+DELETE  http://localhost:3003/api/blogs/650c6cd0ee49c8002bd2f740
+
+###
+
+PUT http://localhost:3003/api/blogs/65004b01d396c4cbebf5bc71
+Content-Type: application/json
+
+ {
+    "title": "code with Aga",
+    "author": "Agnieszka Kosiedowska",
+    "url": "www.codewithaga",
+    "likes": "99",
+    "id": "65004b01d396c4cbebf5bc71"
+  }
