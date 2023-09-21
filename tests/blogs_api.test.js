@@ -54,75 +54,106 @@ test('all ids are defined', async () => {
     idArray.forEach(id => expect(id).toBeDefined())
 })
 
-test('a blog can be added', async () => {
-    const newBlog = {
-        title: "New Blog Title",
-        author: "New author",
-        url: "www.newblog.com",
-        likes: 11
-    }
+describe('adding a blog', () => {
+    test('a blog with full info is added', async () => {
+        const newBlog = {
+            title: "New Blog Title",
+            author: "New author",
+            url: "www.newblog.com",
+            likes: 11
+        }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
-    const blogsAtEnd = await Blog.find({})
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
-    const titles = blogsAtEnd.map(blog => blog.title)
-    expect(titles).toContain('New Blog Title')
+        const blogsAtEnd = await Blog.find({})
+        expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
+        const titles = blogsAtEnd.map(blog => blog.title)
+        expect(titles).toContain('New Blog Title')
+    })
+
+    test('a blog without likes property is added and likes default to 0', async () => {
+        const newBlog = {
+            title: "Blog with no likes",
+            author: "Author with no likes",
+            url: "www.nolikes.com"
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await Blog.find({})
+        expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
+        const blogWithoutLikes = blogsAtEnd.find(blog => blog.title === "Blog with no likes")
+        expect(blogWithoutLikes.likes).toBe(0)
+    })
+
+    test('status code 400 when a blog without title is added', async () => {
+        const newBlog = {
+            author: 'Author',
+            url: 'blogwithonotitle.com',
+            likes: 6
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+
+        const blogsAtEnd = await Blog.find({})
+        expect(blogsAtEnd).toHaveLength(initialBlogs.length)
+    })
+
+    test('status code 400 when a blog without url is added', async () => {
+        const newBlog = {
+            title: 'Blog without url',
+            author: 'Author',
+            likes: 6
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+
+        const blogsAtEnd = await Blog.find({})
+        expect(blogsAtEnd).toHaveLength(initialBlogs.length)
+    })
+
 })
 
-test('while adding blog without likes property, likes default to 0', async () => {
-    const newBlog = {
-        title: "Blog with no likes",
-        author: "Author with no likes",
-        url: "www.nolikes.com"
-    }
+describe('deleting a blog', () => {
+    test('deleting a blog with valid id', async () => {
+        const blogsAtStart = await Blog.find({})
+        const blogToDelete = blogsAtStart[0]
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
 
-    const blogsAtEnd = await Blog.find({})
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
-    const blogWithoutLikes = blogsAtEnd.find(blog => blog.title === "Blog with no likes")
-    expect(blogWithoutLikes.likes).toBe(0)
-})
+        const blogsAtEnd = await Blog.find({})
+        expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1)
+        const titles = blogsAtEnd.map(blog => blog.title)
+        expect(titles).not.toContain(blogToDelete.title)
 
-test('blog without title is added', async () => {
-    const newBlog = {
-        author: 'Author',
-        url: 'blogwithonotitle.com',
-        likes: 6
-    }
+    })
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
+    test('deleting a blog with invalid id', async () => {
+        const idToDelete = 11
 
-    const blogsAtEnd = await Blog.find({})
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length)
-})
+        await api
+            .delete(`/api/blogs/${idToDelete}`)
+            .expect(400)
 
-test('blog without url is added', async () => {
-    const newBlog = {
-        title: 'Blog without url',
-        author: 'Author',
-        likes: 6
-    }
-
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
-
-    const blogsAtEnd = await Blog.find({})
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length)
+        const blogsAtEnd = await Blog.find({})
+        expect(blogsAtEnd).toHaveLength(initialBlogs.length)
+    })
 })
 
 afterAll(async () => {
