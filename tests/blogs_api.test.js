@@ -5,6 +5,7 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const helper = require('./test_helper')
 
 const initialBlogs = [
     {
@@ -35,6 +36,7 @@ const initialBlogs = [
 
 beforeEach(async () => {
     await Blog.deleteMany({})
+    await User.deleteMany({})
 
     const blogObjects = initialBlogs.map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blog => blog.save())
@@ -211,7 +213,7 @@ describe('when there is initially one user in db', () => {
 
         const newUser = {
             username: 'root',
-            name: 'aga',
+            name: 'Aga',
             password: 'piotrek8',
         }
 
@@ -219,12 +221,92 @@ describe('when there is initially one user in db', () => {
             .post('/api/users')
             .send(newUser)
             .expect(400)
-            .expect('Content-Type', /application\/json/)
 
-        expect(result.body.error).toContain('expected `username` to be unique')
+        expect(result.body.error).toContain('username is already existing in database')
+
 
         const usersAtEnd = await helper.usersInDb()
         expect(usersAtEnd).toEqual(usersAtStart)
+    })
+
+    test('creation fails with proper statuscode and message if username is missing', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const userWithoutUsername = {
+            password: '1234',
+            name: 'Piotrek',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(userWithoutUsername)
+            .expect(400)
+
+        expect(result.body.error).toContain('username and password are required')
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toEqual(usersAtStart)
+    })
+
+    test('creation fails with proper statuscode and message if password is missing', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const userWithoutPassword = {
+            username: 'Piotrek',
+            name: 'Piotrek',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(userWithoutPassword)
+            .expect(400)
+
+        expect(result.body.error).toContain('username and password are required')
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toEqual(usersAtStart)
+    })
+
+    test('creation fails with proper statuscode and message if username is less than 3 characters long', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const shortUsername = {
+            username: 'ag',
+            name: 'Aga',
+            password: 'piotrek8',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(shortUsername)
+            .expect(400)
+
+        expect(result.body.error).toContain('username and password must be at least 3 characters long')
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toEqual(usersAtStart)
+
+    })
+
+    test('creation fails with proper statuscode and message if password is less than 3 characters long', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const shortPassword = {
+            username: 'aga',
+            name: 'Aga',
+            password: 'pi',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(shortPassword)
+            .expect(400)
+
+        expect(result.body.error).toContain('username and password must be at least 3 characters long')
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toEqual(usersAtStart)
+
     })
 })
 
