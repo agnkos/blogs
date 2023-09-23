@@ -48,3 +48,22 @@ Content-Type: application/json
     "likes": "99",
     "id": "65004b01d396c4cbebf5bc71"
   }
+
+###
+GET http://localhost:3003/api/users
+
+###
+POST  http://localhost:3003/api/users
+Content-type: application/json
+
+# {
+#     "username": "aga",
+#     "name": "aga",
+#     "password": "Piotrek85"
+# }
+
+{
+    "username": "piotrek",
+    "name": "piotrek",
+    "password": "Aga85"
+}
