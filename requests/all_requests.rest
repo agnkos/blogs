@@ -99,3 +99,16 @@ Content-Type: application/json
   "username": "aga",
   "password": "Piotrek85"
 }
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFnYSIsImlkIjoiNjUwZjAwMTNlODdjZjg2MTkyNTFmNjNiIiwiaWF0IjoxNjk1NjI2ODg5fQ.DXljqoZ9pPmu8o_3r7NKOk2dWXbUTZeXUVGRrtyaBO8
+
+{
+    "title": "cooking blog",
+    "author": "Piotr K",
+    "url": "www.mniam.blogspot.com",
+    "likes": 70,
+    "userId": "650f0043e87cf8619251f641"
+  }
