@@ -114,7 +114,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFnY
   }
 
 ###
-DELETE  http://localhost:3003/api/blogs/6511889847af4fb27aecda77
+PUT http://localhost:3003/api/blogs/6510662372165c140181ec68
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFnYSIsImlkIjoiNjUwZjAwMTNlODdjZjg2MTkyNTFmNjNiIiwiaWF0IjoxNjk1NjI2ODg5fQ.DXljqoZ9pPmu8o_3r7NKOk2dWXbUTZeXUVGRrtyaBO8
+
+  {
+    "title": "learn piano blog",
+    "author": "Piotr K",
+    "url": "www.piano.blogspot.com",
+    "likes": 108,
+    "user": {
+      "username": "piotrek",
+      "name": "piotrek",
+      "id": "650f0043e87cf8619251f641"
+    },
+    "id": "6510662372165c140181ec68"
+  }
+
+###
+DELETE  http://localhost:3003/api/blogs/6515637c4e161ef90f1da12b
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFnYSIsImlkIjoiNjUwZjAwMTNlODdjZjg2MTkyNTFmNjNiIiwiaWF0IjoxNjk1NjI2ODg5fQ.DXljqoZ9pPmu8o_3r7NKOk2dWXbUTZeXUVGRrtyaBO8
 

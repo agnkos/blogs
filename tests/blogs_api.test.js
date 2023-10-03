@@ -9,6 +9,14 @@ const helper = require('./test_helper')
 
 const initialBlogs = [
     {
+        "title": "guitar blog",
+        "author": "Wojtek",
+        "url": "www.guitar-hero.com",
+        "likes": 14,
+        "user": "650f0013e87cf8619251f63b",
+        "id": "651545594e161ef90f1da0b4"
+    },
+    {
         _id: "5a422a851b54a676234d17f7",
         title: "React patterns",
         author: "Michael Chan",
@@ -41,7 +49,7 @@ beforeEach(async () => {
     const blogObjects = initialBlogs.map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blog => blog.save())
     await Promise.all(promiseArray)
-})
+}, 10000)
 
 test('all blog are returned in json format', async () => {
     const response = await api.get('/api/blogs')
@@ -170,9 +178,22 @@ describe('adding a blog', () => {
 })
 
 test('updating a blog', async () => {
-    const blogsAtStart = await Blog.find({})
-    const blogsAtStartJson = blogsAtStart.map(blog => blog.toJSON())
-    const blogToUpdate = { ...blogsAtStartJson[0], likes: 50 }
+
+    // const blogsAtStart = await Blog.find({})
+    // const blogsAtStartJson = blogsAtStart.map(blog => blog.toJSON())
+    // const blogToUpdate = { ...blogsAtStartJson[0], likes: 50 }
+    // console.log(blogToUpdate)
+
+    const blog = {
+        "title": "guitar blog",
+        "author": "Wojtek",
+        "url": "www.guitar-hero.com",
+        "likes": 14,
+        "user": "650f0013e87cf8619251f63b",
+        "id": "651545594e161ef90f1da0b4"
+    }
+
+    const blogToUpdate = { ...blog, likes: 50 }
 
     await api
         .put(`/api/blogs/${blogToUpdate.id}`)
